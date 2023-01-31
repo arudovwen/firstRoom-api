@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\LinkedSocialAccountController;
 
@@ -39,9 +40,18 @@ Route::post('/auth/{provider}/callback', [LinkedSocialAccountController::class, 
 //Guest api
 
 Route::middleware('auth:sanctum')->group(function () {
-    //User routes
+    //User api
+ 
+      Route::middleware('ability:role-client')->group(function () {
 
+        Route::post('change-password', [UserController::class, 'changepassword']);
+        Route::apiResource("user", UserController::class);
+        Route::apiResource("messages", MessageController::class);
+        Route::post('get/message/history', [MessageController::class, 'showMessageHistory']);
+        Route::get('get/message/users/list', [MessageController::class, 'getMessageUsersList']);
 
+      });
+   
 
 
     //Admin api

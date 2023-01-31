@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignUuid("user_id");
             $table->string("property_title");
+            $table->text("property_description")->nullable();
             $table->string("property_type")->nullable();
             $table->string("posting_type")->nullable();
-            $table->string("advert_type")->nullable();
+            $table->string("advert_type")->nullable();  
+            $table->boolean("is_active")->default(false);
             $table->timestamps();
         });
     }

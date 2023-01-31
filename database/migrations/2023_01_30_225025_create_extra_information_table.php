@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('extra_information', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid("user_id");
-            $table->uuid("receiver_id");
-            $table->text("message")->nullable();
-            $table->text("attachment")->nullable();
-            $table->string("read_at")->nullable();
-            $table->string("deleted_at")->nullable();
+            $table->foreignId("property_id");
+            $table->boolean("display_phone")->default(false);
+            $table->string("where_you_heard_about_us")->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('extra_information');
     }
 };

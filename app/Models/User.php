@@ -10,6 +10,68 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * App\Models\User
+ *
+ * @property string $id
+ * @property string|null $firstName
+ * @property string|null $lastName
+ * @property string|null $profile
+ * @property string|null $gender
+ * @property string|null $dob
+ * @property string|null $phoneCode
+ * @property string|null $phoneNumber
+ * @property int $is_admin
+ * @property string $email
+ * @property \Illuminate\Support\Carbon|null $email_verified_at
+ * @property string|null $password
+ * @property string|null $referral_link
+ * @property string|null $remember_token
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int|null $deleted_by
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Message[] $messages
+ * @property-read int|null $messages_count
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Order[] $orders
+ * @property-read int|null $orders_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Property[] $properties
+ * @property-read int|null $properties_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Purchase[] $purchases
+ * @property-read int|null $purchases_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property-read int|null $tokens_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Transaction[] $transactions
+ * @property-read int|null $transactions_count
+ * @method static \Database\Factories\UserFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
+ * @method static \Illuminate\Database\Query\Builder|User onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedBy($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDob($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsAdmin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoneCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoneNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereProfile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereReferralLink($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|User withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
+ * @mixin \Eloquent
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, softDeletes, HasUuids;
@@ -20,21 +82,18 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstName',
+        'lastName',
+        'profile',
         'email',
         'password',
-        'username',
         'phone',
         'is_admin',
-        'avatar',
-        'referral_link',
-        'last_name',
-        'first_name',
         'gender',
-        'address',
         'dob',
-        'country',
-        'favourite_teams'
+        'phoneCode',
+        'phoneNumber',
+        'referral_link'
     ];
 
     /**
@@ -43,13 +102,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
         'updated_at',
-        'email_verified_at',
         'deleted_at',
         'deleted_by',
-        'is_admin'
     ];
 
     /**
@@ -62,125 +118,24 @@ class User extends Authenticatable
     ];
 
 
-    public function favourite_teams()
+    public function properties()
     {
-        return $this->hasMany(FavouriteTeam::class);
+        return $this->hasMany(Property::class);
     }
-
-    public function reports()
+    public function transactions()
     {
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Transaction::class);
     }
-
-    public function withdraw_requests()
+    public function orders()
     {
-        return $this->hasMany(WithdrawRequest::class);
+        return $this->hasMany(Order::class);
     }
-    public function active_chips()
+    public function messages()
     {
-        return $this->hasMany(ActiveChip::class);
+        return $this->hasMany(Message::class);
     }
-    public function histories()
+    public function purchases()
     {
-        return $this->hasMany(History::class);
-    }
-
-
-    public function referrals()
-    {
-        return $this->hasMany(Referral::class);
-    }
-
-    public function accountdetails()
-    {
-        return $this->hasOne(AccountDetail::class);
-    }
-
-    public function socialaccounts()
-    {
-        return $this->hasMany(LinkedSocialAccount::class);
-    }
-
-    public function squad()
-    {
-        return $this->hasMany(GamerSquad::class);
-    }
-    public function freesquad()
-    {
-        return $this->hasMany(FreeHitSquad::class);
-    }
-    public function forwards()
-    {
-        return $this->squad()->get()->filter(function ($a) {
-            return $a->position_id == 4;
-        });
-    }
-    public function defenders()
-    {
-        return $this->squad()->get()->filter(function ($a) {
-            return $a->position_id == 2;
-        });
-    }
-    public function goalkeepers()
-    {
-        return $this->squad()->get()->filter(function ($a) {
-            return $a->position_id == 1;
-        });
-    }
-    public function midfielders()
-    {
-        return $this->squad()->get()->filter(function ($a) {
-            return $a->position_id == 3;
-        });
-    }
-
-    public function freeforwards()
-    {
-        return $this->freesquad()->get()->filter(function ($a) {
-            return $a->position_id == 4;
-        });
-    }
-    public function freedefenders()
-    {
-        return $this->freesquad()->get()->filter(function ($a) {
-            return $a->position_id == 2;
-        });
-    }
-    public function freegoalkeepers()
-    {
-        return $this->freesquad()->get()->filter(function ($a) {
-            return $a->position_id == 1;
-        });
-    }
-    public function freemidfielders()
-    {
-        return $this->freesquad()->get()->filter(function ($a) {
-            return $a->position_id == 3;
-        });
-    }
-    public function totalvalue()
-    {
-        return $this->squad()->get()->map(function ($a) {
-            return $a->value;
-        })->reduce(function ($a, $b) {
-            return $a + $b;
-        }, 0);;
-    }
-    public function chip()
-    {
-        return $this->hasOne(Chip::class);
-    }
-
-    public function referral()
-    {
-        return $this->belongsTo(Referral::class);
-    }
-    public function leagues()
-    {
-        return $this->belongsToMany(League::class)->withPivot('is_owner');
-    }
-    public function gameweekpoint()
-    {
-        return $this->hasMany(GameweekPoint::class);
+        return $this->hasMany(Purchase::class);
     }
 }

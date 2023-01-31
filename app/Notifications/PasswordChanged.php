@@ -43,10 +43,10 @@ class PasswordChanged extends Notification implements ShouldQueue
         return (new MailMessage)
 
             ->subject('Password Changed Successful')
-            ->from('tefzon@gmail.com', 'Tefzon Fantasy League')
-            ->greeting('Hello Gamer!')
+            ->from('noreply@firstroom.co.uk', 'FirstRoom Team')
+            ->greeting('Hello!')
             ->line('Your password change was successful')
-            ->line('Thank you for using our application!');
+            ->line('Thank you for using our app!');
     }
 
     /**

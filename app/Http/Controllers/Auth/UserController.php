@@ -3,31 +3,24 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\Otp;
-use App\Models\Chip;
 use App\Models\User;
-use App\Mail\OtpRequest;
-use App\Models\Referral;
-use App\Mail\WelcomeGamer;
-use App\Models\ActiveChip;
 use App\Mail\PasswordReset;
 use Illuminate\Support\Str;
 use App\Jobs\VerifyEmailJob;
 use Illuminate\Http\Request;
-use App\Models\AccountDetail;
-use App\Models\FavouriteTeam;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
-use App\Notifications\NewReferral;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Resources\GamerResource;
 use App\Notifications\PasswordChanged;
 use App\Notifications\UserIntroduction;
 use App\Notifications\LoginNotification;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 
 
 class UserController extends Controller
@@ -38,7 +31,7 @@ class UserController extends Controller
     }
     public function show(User $user)
     {
-        return  new GamerResource($user);
+        return  new UserResource($user);
     }
 
     public function register(Request $request)
@@ -47,9 +40,19 @@ class UserController extends Controller
         try {
             return  DB::transaction(function () use ($request) {
                 $validator = Validator::make(request()->all(), [
-                    'email' => 'required|email| unique:users',
-                    'password' => 'required|min:6',
-                    'username' => 'required | unique:users|min:6',
+                    'email' => 'required|email:rfc,dns|unique:users,email',
+                    'password' => [
+                        'required',
+                        Password::min(8)
+                            ->letters()
+                            ->mixedCase()
+                            ->numbers()
+                            ->symbols()
+                            ->uncompromised()
+                    ],
+
+                    'firstName' => 'required|min:2',
+                    'lastName' => 'required|min:2',
                 ]);
                 if ($validator->fails()) {
                     return response()->json([
@@ -59,8 +62,8 @@ class UserController extends Controller
                 }
                 $info = $request->all();
                 $info['password'] = Hash::make($request->password);
-                $info['referral_link'] = $request->username;
-            
+
+
                 $user = User::create($info);
                 $credentials = [
                     'email' => $request->email,
@@ -69,22 +72,19 @@ class UserController extends Controller
                 if ($request->is_admin && $request->has('is_admin')  && $request->filled('is_admin')) {
                     $token = $user->createToken('user-token', ['role-admin'])->plainTextToken;
                 } else {
-                    $token = $user->createToken('user-token', ['role-gamer'])->plainTextToken;
-                }
-
-                if ($request->referral_link && $request->has('referral_link')  && $request->filled('referral_link')) {
-                    $user->referral()->create(['referral_link' => strtolower($request->referral_link)]);
+                    $token = $user->createToken('user-token', ['role-client'])->plainTextToken;
                 }
 
                 $data = [
                     'email' => $user->email,
-                    'name' => $user->name,
-                    'username' => $user->username,
+                    'firstName' => $user->firstName,
+                    'lastName' => $user->lastName,
+
                 ];
 
-                //send welcome email
-                dispatch(new \App\Jobs\WelcomeGamerJob($data));
+
                 $code = Str::random(40);
+
 
                 // send email verification email
                 DB::table('password_resets')->insert(
@@ -92,29 +92,10 @@ class UserController extends Controller
                 );
                 $detail = [
                     'email' => $user->email,
-                    'url' => 'https://tefzon.com/verify-email?token=' . $code . '&new_user=' . $user->username
+                    'url' => 'https://firstroom.co.uk/verify-email?token=' . $code . '&new_user=' . $user->email
                 ];
-                dispatch(new \App\Jobs\VerifyEmailJob($detail));
 
 
-                //create chips data
-                $chips = new Chip();
-                $chips->user_id = $user->id;
-                $chips->save();
-
-                $activechips = new ActiveChip();
-                $activechips->user_id = $user->id;
-                $activechips->status = true;
-                $activechips->chip = 'wildcard';
-                $activechips->start = Carbon::now();
-                $activechips->end = Carbon::now();
-                $activechips->save();
-
-
-                //Create extra account details
-                $account = new  AccountDetail();
-                $account->user_id = $user->id;
-                $account->save();
 
                 if ($request->has('referral') && $request->filled('referral') && !is_null($request->referral)) {
                     $referral = new Referral();
@@ -125,20 +106,17 @@ class UserController extends Controller
                     $referringUser->notify(new NewReferral($user));
                 }
 
-                if ($request->has('favourite_team') && $request->filled('favourite_team') && !is_null($request->favourite_team)) {
-                    $team = new FavouriteTeam();
-                    $team->user_id = $user->id;
-                    $team->team_id = $request->favourite_team;
-                    $team->save();
-                }
+
+                //send welcome email
+                dispatch(new \App\Jobs\WelcomeEmailJob($data))->afterResponse();
+                dispatch(new \App\Jobs\VerifyEmailJob($detail))->afterResponse();
 
 
-                $user->notify(new UserIntroduction($user));
                 return response([
                     'status' => true,
                     'message' => 'creation successful',
                     'token' => $token,
-                    'user' => $user
+                    'user' => new UserResource($user)
                 ], 201);
             });
         } catch (\Throwable $th) {
@@ -176,16 +154,15 @@ class UserController extends Controller
             if ($user->is_admin) {
                 $token = $user->createToken('user-token', ['role-admin'])->plainTextToken;
             } else {
-                $token = $user->createToken('user-token', ['role-gamer'])->plainTextToken;
+                $token = $user->createToken('user-token', ['role-client'])->plainTextToken;
             }
-            $data =  new GamerResource($user);
-
+            $data =  $user;
             $user->notify(new LoginNotification(['device' => $request->header('User-Agent')]));
             return response([
                 'status' => true,
                 'message' => 'login successful',
                 'token' => $token,
-                'user' => $data
+                'user' => new UserResource($user)
             ], 200);
         } catch (\Throwable $th) {
             return response([
@@ -221,12 +198,12 @@ class UserController extends Controller
 
                 ], 422);
             }
-            $maildata = [
-                'title' => 'TFZ Password Reset',
+            $details = [
+                'title' => 'FirstRoom Password Reset',
                 'url' => 'http://localhost:8000/?token=' . $token . '&action=password_reset'
             ];
 
-            Mail::to($credentials['email'])->send(new PasswordReset($maildata));
+            Mail::to($credentials['email'])->send(new PasswordReset($details));
             return response()->json([
                 "success" => true,
                 "message" => 'email sent',
@@ -244,6 +221,7 @@ class UserController extends Controller
         try {
             $validator = Validator::make($request->all(), [
 
+                'token' => 'required',
                 'password' => 'required|confirmed|min:6',
 
             ]);
@@ -271,7 +249,7 @@ class UserController extends Controller
             if ($checkpassword) {
                 return response()->json([
                     "success" => false,
-                    "message" => 'identical password'
+                    "message" => 'match old password'
 
                 ], 422);
             }
@@ -283,7 +261,55 @@ class UserController extends Controller
             DB::table('password_resets')->where(['token' => $request->token])->delete();
 
             $user->notify(new PasswordChanged());
+            $this->logout($user);
+            return response()->json([
+                "success" => true,
+                "message" => 'Your password has been changed'
 
+            ], 200);
+        } catch (\Throwable $th) {
+            return response([
+                'status' => false,
+                'message' => 'failed'
+            ], 500);
+        }
+    }
+    public function changepassword(Request $request)
+    {
+
+        $user = auth("sanctum")->user();
+ 
+        try {
+            $validator = Validator::make($request->all(), [
+
+                'oldPassword' => 'required|min:6',
+                'newPassword' => 'required|confirmed|min:6',
+
+
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'errors' => $validator->errors(),
+
+                ], 422);
+            }
+
+
+
+            $checkpassword = Hash::check($request->oldPassword, $user->password);
+            if (!$checkpassword) {
+                return response()->json([
+                    "success" => false,
+                    "message" => 'invalid old password'
+
+                ], 422);
+            }
+
+            $user->password = Hash::make($request->newPassword);
+            $user->save();
+
+            $user->notify(new PasswordChanged());
+           
             return response()->json([
                 "success" => true,
                 "message" => 'Your password has been changed'
@@ -325,7 +351,7 @@ class UserController extends Controller
             ];
 
 
-            Mail::to($user)->send(new OtpRequest($maildata));
+
             return response()->json([
                 "success" => true,
                 "message" => 'otp sent to email'
@@ -396,28 +422,24 @@ class UserController extends Controller
     {
         try {
 
-            if ($request->has('name') && $request->filled('name') && !is_null($request->name)) {
-                $user->name = $request->name;
+
+            if ($request->has('phoneCode') && $request->filled('phoneCode') && !is_null($request->phoneCode)) {
+                $user->phoneCode = $request->phoneCode;
             }
-            if ($request->has('username') && $request->filled('username') && !is_null($request->username)) {
-                $user->username = $request->username;
+            if ($request->has('phoneNumber') && $request->filled('phoneNumber') && !is_null($request->phoneNumber)) {
+                $user->phoneNumber = $request->phoneNumber;
             }
-            if ($request->has('phone') && $request->filled('phone') && !is_null($request->phone)) {
-                $user->phone = $request->phone;
-            }
-            if ($request->has('avatar') && $request->filled('avatar') && !is_null($request->avatar)) {
+            if ($request->has('profile') && $request->filled('profile') && !is_null($request->avatar)) {
                 $user->avatar = $request->avatar;
             }
 
-            if ($request->has('first_name') && $request->filled('first_name') && !is_null($request->first_name)) {
-                $user->first_name = $request->first_name;
+            if ($request->has('firstName') && $request->filled('firstName') && !is_null($request->firstName)) {
+                $user->firstName = $request->firstName;
             }
-            if ($request->has('last_name') && $request->filled('last_name') && !is_null($request->last_name)) {
-                $user->last_name = $request->last_name;
+            if ($request->has('lastName') && $request->filled('lastName') && !is_null($request->lastName)) {
+                $user->lastName = $request->lastName;
             }
-            if ($request->has('country') && $request->filled('country') && !is_null($request->country)) {
-                $user->country = $request->country;
-            }
+
             if ($request->has('gender') && $request->filled('gender') && !is_null($request->gender)) {
                 $user->gender = $request->gender;
             }
@@ -428,15 +450,13 @@ class UserController extends Controller
             if ($request->has('dob') && $request->filled('dob') && !is_null($request->dob)) {
                 $user->dob = $request->dob;
             }
-            if ($request->has('favourite_team') && $request->filled('favourite_team') && !is_null($request->favourite_team)) {
-                $user->dob = $request->favourite_team;
-            }
+
 
             $user->save();
             return response()->json([
                 'status' => true,
                 'message' => 'updated',
-                'data' =>  new GamerResource($user)
+                'data' =>  new UserResource($user)
             ]);
         } catch (\Throwable $th) {
             return response([

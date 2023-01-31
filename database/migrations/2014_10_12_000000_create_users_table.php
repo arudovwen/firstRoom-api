@@ -17,6 +17,9 @@ class CreateUsersTable extends Migration
             $table->uuid('id')->primary();
             $table->string('firstName')->nullable();
             $table->string('lastName')->nullable();
+            $table->string('profile')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('dob')->nullable();
             $table->string('phoneCode')->nullable();
             $table->string('phoneNumber')->nullable()->unique();
             $table->boolean('is_admin')->default(false);
@@ -28,7 +31,6 @@ class CreateUsersTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->bigInteger('deleted_by')->nullable();
-
         });
     }
 

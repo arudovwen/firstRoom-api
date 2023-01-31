@@ -41,8 +41,8 @@ class LinkedSocialAccountController extends Controller
             ],
             [
                 'email_verified_at' => now(),
-                'first_name' => $name[0],
-                'last_name' => $name[1],
+                'firstName' => $name[0],
+                'lastName' => $name[1],
                 'username' => str_replace(' ','', $user->getName()),
                 'avatar' => $user->getAvatar()
 
@@ -58,7 +58,7 @@ class LinkedSocialAccountController extends Controller
         if ($userCreated->is_admin) {
             $token = $userCreated->createToken('user-token', ['role-admin'])->plainTextToken;
         } else {
-            $token = $userCreated->createToken('user-token', ['role-gamer'])->plainTextToken;
+            $token = $userCreated->createToken('user-token', ['role-client'])->plainTextToken;
         }
         $data =  new GamerResource($userCreated);
 

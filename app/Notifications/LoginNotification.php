@@ -45,10 +45,9 @@ class LoginNotification extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('New Login Alert')
-            ->from('tefzon@gmail.com', 'Tefzon Fantasy League')
-            ->greeting('Hello Gamer!')
-            ->line('Your account was accessed from '. $this->detail['device'].' on ' . Carbon::now())
-            ->line('Thank you for using our application!');
+            ->from('noreply@firstroom.co.uk', 'FirstRoom Team')
+            ->line('Your account was just accessed from '. $this->detail['device'].' on ' . Carbon::now())
+            ->line('Thank you for using our app!');
     }
 
     /**
