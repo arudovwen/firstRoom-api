@@ -3,8 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\ExistingFlatMateController;
+use App\Http\Controllers\ExtraInformationController;
 use App\Http\Controllers\LinkedSocialAccountController;
+use App\Http\Controllers\PropertyInformationController;
+use App\Http\Controllers\RoomInformationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,9 +51,19 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::post('change-password', [UserController::class, 'changepassword']);
         Route::apiResource("user", UserController::class);
+
+        // message api 
         Route::apiResource("messages", MessageController::class);
         Route::post('get/message/history', [MessageController::class, 'showMessageHistory']);
         Route::get('get/message/users/list', [MessageController::class, 'getMessageUsersList']);
+
+        // property api
+        Route::apiResource("properties", PropertyController::class);
+        Route::apiResource("property/information", PropertyInformationController::class);
+        Route::apiResource("extra/information", ExtraInformationController::class);
+        Route::apiResource("existing/flatmate", ExistingFlatMateController::class);
+        Route::apiResource("room/information", RoomInformationController::class);
+
 
       });
    

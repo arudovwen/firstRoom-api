@@ -49,7 +49,8 @@ class PropertyInformation extends Model
     use HasFactory;
 
     protected $casts = [
-        'property_images' => 'array'
+        'property_images' => 'array',
+        'amenities' => 'array'
     ];
 
     public function property()

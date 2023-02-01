@@ -52,6 +52,12 @@ class ExistingFlatMate extends Model
 {
     use HasFactory;
 
+
+    protected $casts = [
+        'interests' => 'array',
+
+    ];
+    
     public function property()
     {
         return $this->belongsTo(Property::class);
