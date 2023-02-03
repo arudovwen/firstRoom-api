@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Http\Resources\UserListResource;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -47,6 +48,8 @@ class MessageController extends Controller
         $message->receiver_id = $request->receiver_id;
         $message->attachment = $request->attachment;
         $message->save();
+
+        broadcast(new MessageSent($message));
 
         return response()->json([
             "success" => true,

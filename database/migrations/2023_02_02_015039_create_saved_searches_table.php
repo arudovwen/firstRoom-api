@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('saved_searches', function (Blueprint $table) {
             $table->id();
+            $table->foreignUuid("user_id");
+            $table->json("search_data");
             $table->timestamps();
         });
     }

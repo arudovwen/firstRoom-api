@@ -86,10 +86,21 @@ namespace App\Models{
 /**
  * App\Models\Favourite
  *
+ * @property int $id
+ * @property string $user_id
+ * @property int $property_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Property|null $property
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Favourite newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Favourite newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Favourite query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite wherePropertyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite whereUserId($value)
  */
 	class Favourite extends \Eloquent {}
 }
@@ -98,10 +109,21 @@ namespace App\Models{
 /**
  * App\Models\Interaction
  *
+ * @property int $id
+ * @property string $user_id
+ * @property int $property_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Property|null $property
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Interaction newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Interaction newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Interaction query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction wherePropertyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction whereUserId($value)
  */
 	class Interaction extends \Eloquent {}
 }
@@ -161,10 +183,44 @@ namespace App\Models{
 /**
  * App\Models\NewFlatMate
  *
+ * @property int $id
+ * @property int $property_id
+ * @property int|null $smoking
+ * @property string|null $gender
+ * @property string|null $occupation
+ * @property int|null $pets
+ * @property string|null $age
+ * @property string|null $language
+ * @property string|null $nationality
+ * @property string|null $sexual_orientation
+ * @property array|null $interests
+ * @property string|null $min_age
+ * @property string|null $max_age
+ * @property int|null $vegetarian_preferred
+ * @property int|null $couples_welcome
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Property|null $property
  * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate query()
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereAge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereCouplesWelcome($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereInterests($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereLanguage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereMaxAge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereMinAge($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereNationality($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereOccupation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate wherePets($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate wherePropertyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereSexualOrientation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereSmoking($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate whereVegetarianPreferred($value)
  */
 	class NewFlatMate extends \Eloquent {}
 }
@@ -233,6 +289,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Property whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Property whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Interaction[] $interactions
+ * @property-read int|null $interactions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
+ * @property-read int|null $reviews_count
  */
 	class Property extends \Eloquent {}
 }
@@ -303,10 +363,25 @@ namespace App\Models{
 /**
  * App\Models\Review
  *
+ * @property int $id
+ * @property string $user_id
+ * @property int $property_id
+ * @property string $message
+ * @property string $rating
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Property $property
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Review newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Review newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Review query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review wherePropertyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Review whereUserId($value)
  */
 	class Review extends \Eloquent {}
 }
@@ -362,10 +437,16 @@ namespace App\Models{
 /**
  * App\Models\SavedSearch
  *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereUpdatedAt($value)
  */
 	class SavedSearch extends \Eloquent {}
 }
@@ -463,14 +544,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SavedSearch[] $avedsearches
- * @property-read int|null $avedsearches_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Favourite[] $favourites
  * @property-read int|null $favourites_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Interaction[] $interactions
  * @property-read int|null $interactions_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
  * @property-read int|null $reviews_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SavedSearch[] $savedsearches
+ * @property-read int|null $savedsearches_count
  */
 	class User extends \Eloquent {}
 }

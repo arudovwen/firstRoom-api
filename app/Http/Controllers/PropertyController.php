@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PropertyResource;
+use App\Models\Interaction;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -79,7 +80,24 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-        $data = Property::where("id", $id)->with("propertyInfo", "user", "roomInfo", "extraInfo", "exixtingFlatmate")->first();
+        $data = Property::where("id", $id)->first();
+
+        return  response()->json([
+            "status" => true,
+            "message" => "success",
+            "data" => $data
+        ]);
+    }
+    public function getProperty($id)
+    {
+        $user = auth("sanctum")->user();
+        $data = Property::where("id", $id)->with("propertyInfo", "user", "roomInfo", "extraInfo", "exixtingFlatmate", "reviews")->first();
+       
+        //handle interaction
+        $interaction = new Interaction();
+        $interaction->user_id = $user->id;
+        $interaction->property_id = $id;
+        $interaction->save();
 
         return  response()->json([
             "status" => true,

@@ -29,6 +29,7 @@ class ExtraInformationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "display_phone" => "boolean",
+            "property_id" => "required|exists:properties,id",
 
         ]);
         if ($validator->fails()) {

@@ -150,7 +150,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Review::class);
     }
-    public function avedsearches()
+    public function savedsearches()
     {
         return $this->hasMany(SavedSearch::class);
     }

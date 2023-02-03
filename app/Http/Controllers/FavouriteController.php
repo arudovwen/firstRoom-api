@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Favourite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FavouriteController extends Controller
 {
@@ -14,18 +15,15 @@ class FavouriteController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth("sanctum")->user();
+        $data =  $user->favourites()->with("property")->get();
+        return response()->json([
+            "status" => true,
+            "message" => count($data) . " found",
+            "data" => $data
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,7 +33,34 @@ class FavouriteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "property_id" => "required|exists:properties,id",
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+
+            ], 422);
+        }
+        $user = auth("sanctum")->user();
+        $check = $user->favourites()->where("property_id", $request->property_id)->first();
+        if (!is_null($check)) {
+            return response()->json([
+                "status" => false,
+                "message" => "already added",
+
+            ]);
+        } else {
+            $favourite = new Favourite();
+            $favourite->user_id = $user->id;
+            $favourite->property_id = $request->property_id;
+            $favourite->save();
+            return response()->json([
+                "status" => true,
+                "message" => "created",
+
+            ]);
+        }
     }
 
     /**
@@ -80,6 +105,11 @@ class FavouriteController extends Controller
      */
     public function destroy(Favourite $favourite)
     {
-        //
+        $favourite->delete();
+        return response()->json([
+            "status" => true,
+            "message" => "removed",
+
+        ]);
     }
 }

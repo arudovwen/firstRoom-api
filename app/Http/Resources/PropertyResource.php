@@ -16,7 +16,7 @@ class PropertyResource extends JsonResource
     {
        
         return [
-            // "id" => $this["id"],
+            "id" => $this["id"],
             "property_title" => $this["property_title"],
             "property_description" => $this["property_description"],
             "property_type" => $this["property_type"],
@@ -26,6 +26,7 @@ class PropertyResource extends JsonResource
             "property_info" => $this["property_info"],
             "owner" => new UserResource($this["user"]),
             "room_info" => $this["room_info"],
+            "reviews" => $this["reviews"],
             "extra_info" => $this["extra_info"],
             "exixting_flatmate" => $this["exixting_flatmate"]
         ];

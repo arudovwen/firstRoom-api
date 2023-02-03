@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Interaction;
 use App\Models\Interactions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class InteractionsController extends Controller
+class InteractionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,7 +37,16 @@ class InteractionsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "property_id" => "required|exists:properties,id",
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+
+            ], 422);
+        }
+        $user = auth("sanctum")->user();
     }
 
     /**
@@ -44,9 +55,19 @@ class InteractionsController extends Controller
      * @param  \App\Models\Interactions  $interactions
      * @return \Illuminate\Http\Response
      */
-    public function show(Interactions $interactions)
+    public function show($property_id)
     {
-        //
+
+
+        $data = Interaction::where("property_id", $property_id)->with("user")->get();
+
+        return response()->json([
+            "status" => true,
+            "message" => "created",
+            "count" => count($data),
+            "data" => $data
+
+        ]);
     }
 
     /**

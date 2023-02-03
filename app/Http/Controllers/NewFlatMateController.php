@@ -40,6 +40,7 @@ class NewFlatMateController extends Controller
         $validator = Validator::make($request->all(), [
             "smoking" => "boolean",
             "vegetarian_preferred" => "boolean",
+            "property_id" => "required|exists:properties,id",
             "pets" => "boolean"
         ]);
         if ($validator->fails()) {

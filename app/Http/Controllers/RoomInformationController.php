@@ -42,6 +42,7 @@ class RoomInformationController extends Controller
             "short_term_let"=> "boolean",
             "reference_required"=> "boolean",
             "bills_included"=> "boolean",
+            "property_id" => "required|exists:properties,id",
         ]);
         if ($validator->fails()) {
             return response()->json([

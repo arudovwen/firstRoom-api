@@ -30,6 +30,7 @@ class PropertyInformationController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "shared_living_room" => "boolean",
+            "property_id" => "required|exists:properties,id",
         ]);
         if ($validator->fails()) {
             return response()->json([

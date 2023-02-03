@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SavedSearch;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SavedSearchController extends Controller
 {
@@ -14,7 +15,13 @@ class SavedSearchController extends Controller
      */
     public function index()
     {
-        //
+        $user = auth("sanctum")->user();
+        $data =  $user->savedsearches()->get();
+        return response()->json([
+            "status" => true,
+            "message" => count($data) . " found",
+            "data" => $data
+        ]);
     }
 
     /**
@@ -35,7 +42,26 @@ class SavedSearchController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            "search_data" => "required",
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+
+            ], 422);
+        }
+        $user = auth("sanctum")->user();
+        $savedSearch = new SavedSearch();
+        $savedSearch->user_id = $user->id;
+        $savedSearch->search_data = $request->search_data;
+
+        $savedSearch->save();
+        return response()->json([
+            "status" => true,
+            "message" => "created",
+
+        ]);
     }
 
     /**
@@ -44,42 +70,20 @@ class SavedSearchController extends Controller
      * @param  \App\Models\SavedSearch  $savedSearch
      * @return \Illuminate\Http\Response
      */
-    public function show(SavedSearch $savedSearch)
+    public function show($savedSearch)
     {
-        //
+        return SavedSearch::find($savedSearch);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\SavedSearch  $savedSearch
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SavedSearch $savedSearch)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\SavedSearch  $savedSearch
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, SavedSearch $savedSearch)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\SavedSearch  $savedSearch
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(SavedSearch $savedSearch)
     {
-        //
+        $savedSearch->delete();
+        return response()->json([
+            "status" => true,
+            "message" => "removed",
+
+        ]);
     }
 }

@@ -42,6 +42,11 @@ class Property extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'id',
+      
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -50,6 +55,14 @@ class Property extends Model
     public function propertyInfo()
     {
         return $this->hasOne(PropertyInformation::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function interactions()
+    {
+        return $this->hasMany(Interaction::class);
     }
 
     public function roomInfo()
