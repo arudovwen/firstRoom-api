@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PropertyResource;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +14,18 @@ class PropertyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Property::with("propertyInfo")->get();
+        $limit = 10;
+        $search = "";
+        if ($request->limit && $request->has("limit")) {
+            $limit =  $request->limit;
+        }
+        if ($request->search && $request->has("search")) {
+            $search =  $request->search;
+        }
+
+        return Property::whereLike("property_title", $search)->with("propertyInfo")->paginate($limit);
     }
 
 
@@ -30,7 +40,7 @@ class PropertyController extends Controller
         $validator = Validator::make($request->all(), [
             'property_title' => 'required',
             'property_description' => 'required',
-            'posting_type' => 'required',
+            'posting_type' => '',
             'property_type' => 'required',
             'advert_type' => 'required',
 
@@ -67,9 +77,15 @@ class PropertyController extends Controller
      * @param  \App\Models\Property  $property
      * @return \Illuminate\Http\Response
      */
-    public function show(Property $property)
+    public function show($id)
     {
-        return $property->with("propertyInfo", "user", "roomInfo", "extraInfo", "exixtingFlatmate");
+        $data = Property::where("id", $id)->with("propertyInfo", "user", "roomInfo", "extraInfo", "exixtingFlatmate")->first();
+
+        return  response()->json([
+            "status" => true,
+            "message" => "success",
+            "data" => new PropertyResource(collect($data))
+        ]);
     }
 
 
@@ -102,6 +118,10 @@ class PropertyController extends Controller
 
         if ($request->has('advert_type') && $request->filled('advert_type') && !is_null($request->advert_type)) {
             $property->advert_type = $request->advert_type;
+        }
+
+        if ($request->has('is_active') && $request->filled('is_active') && !is_null($request->is_active)) {
+            $property->is_active = $request->is_active;
         }
 
         $property->save();

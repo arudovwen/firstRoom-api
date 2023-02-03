@@ -138,4 +138,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Purchase::class);
     }
+    public function favourites()
+    {
+        return $this->hasMany(Favourite::class);
+    }
+    public function interactions()
+    {
+        return $this->hasMany(Interaction::class);
+    }
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+    public function avedsearches()
+    {
+        return $this->hasMany(SavedSearch::class);
+    }
 }

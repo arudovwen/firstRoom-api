@@ -18,7 +18,7 @@ class PropertyInformationController extends Controller
         //
     }
 
-  
+
 
     /**
      * Store a newly created resource in storage.
@@ -29,7 +29,7 @@ class PropertyInformationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-           
+            "shared_living_room" => "boolean",
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -39,10 +39,11 @@ class PropertyInformationController extends Controller
         }
 
         $user = auth("sanctum")->user();
-       
+
 
         $property = new PropertyInformation();
         $property->property_id = $request->property_id;
+        $property->property_price = $request->property_price;
         $property->property_images = $request->property_images;
         $property->rooms_for_rent = $request->rooms_for_rent;
         $property->type_of_property = $request->type_of_property;
@@ -71,10 +72,10 @@ class PropertyInformationController extends Controller
      */
     public function show($id)
     {
-        return PropertyInformation::where("property_id", $id)->first();
+        return PropertyInformation::where("id", $id)->first();
     }
 
-   
+
     /**
      * Update the specified resource in storage.
      *
@@ -85,14 +86,15 @@ class PropertyInformationController extends Controller
     public function update(Request $request, PropertyInformation $propertyInformation)
     {
 
-    
-   
         if ($request->has('property_images') && $request->filled('property_images') && !is_null($request->property_images)) {
             $propertyInformation->property_images = $request->property_images;
         }
 
         if ($request->has('rooms_for_rent') && $request->filled('rooms_for_rent') && !is_null($request->rooms_for_rent)) {
             $propertyInformation->rooms_for_rent = $request->rooms_for_rent;
+        }
+        if ($request->has('property_price') && $request->filled('property_price') && !is_null($request->property_price)) {
+            $propertyInformation->property_price = $request->property_price;
         }
 
         if ($request->has('type_of_property') && $request->filled('type_of_property') && !is_null($request->type_of_property)) {

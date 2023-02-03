@@ -84,6 +84,30 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Favourite
+ *
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Favourite query()
+ */
+	class Favourite extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Interaction
+ *
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Interaction query()
+ */
+	class Interaction extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\LinkedSocialAccount
  *
  * @property int $id
@@ -131,6 +155,18 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class Message extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\NewFlatMate
+ *
+ * @property-read \App\Models\Property|null $property
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|NewFlatMate query()
+ */
+	class NewFlatMate extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -265,6 +301,18 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Review
+ *
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Review query()
+ */
+	class Review extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\RoomInformation
  *
  * @property int $id
@@ -308,6 +356,18 @@ namespace App\Models{
  * @mixin \Eloquent
  */
 	class RoomInformation extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\SavedSearch
+ *
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch query()
+ */
+	class SavedSearch extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -403,6 +463,14 @@ namespace App\Models{
  * @method static \Illuminate\Database\Query\Builder|User withTrashed()
  * @method static \Illuminate\Database\Query\Builder|User withoutTrashed()
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SavedSearch[] $avedsearches
+ * @property-read int|null $avedsearches_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Favourite[] $favourites
+ * @property-read int|null $favourites_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Interaction[] $interactions
+ * @property-read int|null $interactions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
+ * @property-read int|null $reviews_count
  */
 	class User extends \Eloquent {}
 }

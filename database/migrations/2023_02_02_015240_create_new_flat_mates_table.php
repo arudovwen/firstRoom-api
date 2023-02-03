@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('existing_flat_mates', function (Blueprint $table) {
+        Schema::create('new_flat_mates', function (Blueprint $table) {
             $table->id();
             $table->foreignId("property_id");
             $table->boolean("smoking")->nullable();
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('existing_flat_mates');
+        Schema::dropIfExists('new_flat_mates');
     }
 };

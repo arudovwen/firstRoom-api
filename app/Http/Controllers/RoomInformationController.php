@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RoomInformation;
 use Illuminate\Http\Request;
+use App\Models\RoomInformation;
+use Illuminate\Support\Facades\Validator;
 
 class RoomInformationController extends Controller
 {
@@ -35,7 +36,13 @@ class RoomInformationController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), []);
+        $validator = Validator::make($request->all(), [
+            "amenities_ensuite"=> "boolean",
+            "furnishings"=> "boolean",
+            "short_term_let"=> "boolean",
+            "reference_required"=> "boolean",
+            "bills_included"=> "boolean",
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
@@ -53,14 +60,14 @@ class RoomInformationController extends Controller
         $property->room_size = $request->room_size;
         $property->amenities_ensuite = $request->amenities_ensuite;
         $property->furnishings = $request->furnishings;
-        $property->security_deposits = $request->display_phone;
-        $property->min_stay = $request->where_you_heard_about_us;
-        $property->max_stay = $request->display_phone;
-        $property->short_term_let = $request->where_you_heard_about_us;
-        $property->short_term_let_duration = $request->display_phone;
-        $property->reference_required = $request->where_you_heard_about_us;
-        $property->bills_included = $request->where_you_heard_about_us;
-        $property->internet_included = $request->display_phone;
+        $property->security_deposits = $request->security_deposits;
+        $property->min_stay = $request->min_stay;
+        $property->max_stay = $request->max_stay;
+        $property->short_term_let = $request->short_term_let;
+        $property->short_term_let_duration = $request->short_term_let_duration;
+        $property->reference_required = $request->reference_required;
+        $property->bills_included = $request->bills_included;
+        $property->internet_included = $request->internet_included;
 
 
         $property->save();
@@ -80,7 +87,7 @@ class RoomInformationController extends Controller
      */
     public function show($id)
     {
-        return RoomInformation::where("property_id", $id)->first();
+        return RoomInformation::where("id", $id)->first();
     }
 
     /**
@@ -92,7 +99,6 @@ class RoomInformationController extends Controller
      */
     public function update(Request $request, RoomInformation $roomInformation)
     {
-
 
 
         if ($request->has('room_cost') && $request->filled('room_cost') && !is_null($request->room_cost)) {

@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string("short_term_let_duration")->nullable();
             $table->boolean("reference_required")->nullable();
             $table->boolean("bills_included")->nullable();
-            $table->boolean("internet_included")->nullable();
+            $table->boolean("bills_included")->nullable();
             $table->timestamps();
         });
     }

@@ -7,8 +7,12 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\ExistingFlatMateController;
 use App\Http\Controllers\ExtraInformationController;
+use App\Http\Controllers\FavouriteController;
+use App\Http\Controllers\InteractionsController;
 use App\Http\Controllers\LinkedSocialAccountController;
+use App\Http\Controllers\NewFlatMateController;
 use App\Http\Controllers\PropertyInformationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoomInformationController;
 
 /*
@@ -59,10 +63,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // property api
         Route::apiResource("properties", PropertyController::class);
-        Route::apiResource("property/information", PropertyInformationController::class);
-        Route::apiResource("extra/information", ExtraInformationController::class);
-        Route::apiResource("existing/flatmate", ExistingFlatMateController::class);
-        Route::apiResource("room/information", RoomInformationController::class);
+        Route::apiResource("property-information", PropertyInformationController::class);
+        Route::apiResource("extra-information", ExtraInformationController::class);
+        Route::apiResource("existing-flatmate", ExistingFlatMateController::class);
+        Route::apiResource("new-flatmate", NewFlatMateController::class);
+        Route::apiResource("room-information", RoomInformationController::class);
+        Route::apiResource("reviews", ReviewController::class);
+        Route::apiResource("interactions", InteractionsControllerti::class);
+        Route::apiResource("fsvourites", FavouriteController::class);
 
 
       });

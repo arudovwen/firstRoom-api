@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExtraInformation;
 use Illuminate\Http\Request;
+use App\Models\ExtraInformation;
+use Illuminate\Support\Facades\Validator;
 
 class ExtraInformationController extends Controller
 {
@@ -26,7 +27,10 @@ class ExtraInformationController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), []);
+        $validator = Validator::make($request->all(), [
+            "display_phone" => "boolean",
+
+        ]);
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
@@ -58,7 +62,7 @@ class ExtraInformationController extends Controller
      */
     public function show($id)
     {
-        return ExtraInformation::where("property_id", $id)->first();
+        return ExtraInformation::where("id", $id)->first();
     }
     /**
      * Show the form for editing the specified resource.

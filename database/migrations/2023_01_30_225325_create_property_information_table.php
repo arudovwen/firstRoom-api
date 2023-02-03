@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('property_information', function (Blueprint $table) {
             $table->id();
             $table->foreignId("property_id");
+            $table->string("property_price")->nullable();
             $table->json("property_images")->nullable();
             $table->string("rooms_for_rent")->nullable();
             $table->string("type_of_property")->nullable();
