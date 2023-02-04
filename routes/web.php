@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeagueController;
+use App\Http\Controllers\PropertyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,4 +18,5 @@ use App\Http\Controllers\LeagueController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/get-all', [PropertyController::class, 'getAll']);
 
