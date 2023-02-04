@@ -48,7 +48,7 @@ Route::get('/auth/login/{provider}', [LinkedSocialAccountController::class, 'han
 Route::post('/auth/{provider}/callback', [LinkedSocialAccountController::class, 'handleCallback']);
 
 //Guest api
-Route::get('get-all', [PropertyController::class, 'getAll']);
+Route::get('get/properties', [PropertyController::class, 'getAll']);
 Route::middleware('auth:sanctum')->group(function () {
     //User api
  
