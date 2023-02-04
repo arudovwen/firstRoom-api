@@ -28,6 +28,19 @@ class PropertyController extends Controller
 
         return Property::whereLike("property_title", $search)->with("propertyInfo")->paginate($limit);
     }
+    public function getAll(Request $request)
+    {
+        $limit = 10;
+        $search = "";
+        if ($request->limit && $request->has("limit")) {
+            $limit =  $request->limit;
+        }
+        if ($request->search && $request->has("search")) {
+            $search =  $request->search;
+        }
+
+        return Property::whereLike("property_title", $search)->with("propertyInfo")->paginate($limit);
+    }
 
 
     /**

@@ -63,8 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('get/message/users/list', [MessageController::class, 'getMessageUsersList']);
 
         // property api
+        Route::get('get-all', [PropertyController::class, 'getAll']);
         Route::apiResource("properties", PropertyController::class);
         Route::get('get-property/{id}', [PropertyController::class, 'getProperty']);
+        
         
         Route::apiResource("property-information", PropertyInformationController::class);
       
