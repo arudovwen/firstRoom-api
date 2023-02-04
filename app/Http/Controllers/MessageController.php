@@ -49,11 +49,12 @@ class MessageController extends Controller
         $message->attachment = $request->attachment;
         $message->save();
 
-        broadcast(new MessageSent($message));
+        event(new MessageSent($message->load("user", "receiver"), $user));
 
         return response()->json([
             "success" => true,
-            "message" => 'message sent'
+            "message" => 'message sent',
+            "data" => $message->load("user", "receiver")
 
         ], 200);
     }
@@ -76,7 +77,7 @@ class MessageController extends Controller
         $user_id = $user->id;
         $receiver_id = $request->receiver_id;
 
-        return Message::where(function ($query) use ($user_id, $receiver_id) {
+        return Message::with("user", "receiver")->where(function ($query) use ($user_id, $receiver_id) {
             $query->where('receiver_id', $receiver_id)
                 ->where('user_id', $user_id);
         })->orWhere(function ($query) use ($user_id, $receiver_id) {

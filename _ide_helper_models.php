@@ -175,6 +175,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUserId($value)
  * @mixin \Eloquent
+ * @property-read \App\Models\User|null $receiver
  */
 	class Message extends \Eloquent {}
 }
@@ -438,6 +439,8 @@ namespace App\Models{
  * App\Models\SavedSearch
  *
  * @property int $id
+ * @property string $user_id
+ * @property string $search_data
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
@@ -446,7 +449,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch query()
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereSearchData($value)
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereUserId($value)
  */
 	class SavedSearch extends \Eloquent {}
 }
