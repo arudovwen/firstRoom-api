@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Validator;
 
 class ExtraInformationController extends Controller
 {
+    public function __construct(){
+
+        $this->middleware('auth:sanctum')->except("index", "store", "show");
+    }
     /**
      * Display a listing of the resource.
      *
@@ -40,18 +44,23 @@ class ExtraInformationController extends Controller
         }
 
         $user = auth("sanctum")->user();
-     
-        $property = new ExtraInformation();
-        $property->property_id = $request->property_id;
-        $property->display_phone = $request->display_phone;
-        $property->where_you_heard_about_us = $request->where_you_heard_about_us;
-        
+
+        $extrainfo = new ExtraInformation();
+        $extrainfo->property_id = $request->property_id;
+        $extrainfo->display_phone = $request->display_phone;
+        $extrainfo->where_you_heard_about_us = $request->where_you_heard_about_us;
+
+        $extrainfo->save();
+
+        //update user info
+        $property = Property::find($extrainfo->property_id);
+        $property->user_id = $user->id;
         $property->save();
 
         return response()->json([
             'status' => true,
             'message' => 'created',
-            'data' =>  $property->property_id
+            'data' =>  $extrainfo->property_id
         ]);
     }
 

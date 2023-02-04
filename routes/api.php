@@ -49,6 +49,20 @@ Route::post('/auth/{provider}/callback', [LinkedSocialAccountController::class, 
 
 //Guest api
 Route::get('get/properties', [PropertyController::class, 'getAll']);
+Route::apiResource("properties", PropertyController::class);
+Route::get('get-property/{id}', [PropertyController::class, 'getProperty']);
+
+Route::apiResource("property-information", PropertyInformationController::class);
+      
+Route::apiResource("extra-information", ExtraInformationController::class);
+
+Route::apiResource("existing-flatmate", ExistingFlatMateController::class);
+
+Route::apiResource("new-flatmate", NewFlatMateController::class);
+
+Route::apiResource("room-information", RoomInformationController::class);
+
+
 Route::middleware('auth:sanctum')->group(function () {
     //User api
  
@@ -64,19 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // property api
       
-        Route::apiResource("properties", PropertyController::class);
-        Route::get('get-property/{id}', [PropertyController::class, 'getProperty']);
-        
-        
-        Route::apiResource("property-information", PropertyInformationController::class);
-      
-        Route::apiResource("extra-information", ExtraInformationController::class);
-
-        Route::apiResource("existing-flatmate", ExistingFlatMateController::class);
-
-        Route::apiResource("new-flatmate", NewFlatMateController::class);
-
-        Route::apiResource("room-information", RoomInformationController::class);
+     
 
         Route::apiResource("reviews", ReviewController::class);
         Route::get('property/{property_id}/reviews', [ReviewController::class, 'getPropertyReviews']);

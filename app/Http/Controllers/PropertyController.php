@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Validator;
 
 class PropertyController extends Controller
 {
+    public function __construct(){
+
+        $this->middleware('auth:sanctum')->except("index", "store", "show", "getProperty");
+    }
+    
+        
+    
     /**
      * Display a listing of the resource.
      *
@@ -75,7 +82,7 @@ class PropertyController extends Controller
         $property->posting_type = $request->posting_type;
         $property->property_type = $request->property_type;
         $property->advert_type = $request->advert_type;
-        $property->user_id = $user->id;
+        $property->user_id = !is_null($user)?$user->id:null;
         $property->save();
 
         return response()->json([
@@ -108,7 +115,7 @@ class PropertyController extends Controller
        
         //handle interaction
         $interaction = new Interaction();
-        $interaction->user_id = $user->id;
+        $interaction->user_id = !is_null($user)?$user->id:null;
         $interaction->property_id = $id;
         $interaction->save();
 

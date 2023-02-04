@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Validator;
 
 class RoomInformationController extends Controller
 {
+    public function __construct(){
+
+        $this->middleware('auth:sanctum')->except("index", "store", "show");
+    }
+    
     /**
      * Display a listing of the resource.
      *

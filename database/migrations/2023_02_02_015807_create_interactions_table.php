@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('interactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid("user_id");
+            $table->foreignUuid("user_id")->nullable();
             $table->foreignId("property_id");
             $table->timestamps();
         });

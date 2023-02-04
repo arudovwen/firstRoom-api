@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid("user_id");
+            $table->foreignUuid("user_id")->nullable();
             $table->string("property_title");
             $table->text("property_description")->nullable();
             $table->string("property_type")->nullable();
