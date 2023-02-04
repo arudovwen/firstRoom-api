@@ -12,6 +12,10 @@
         {
             "src": "/(.*)",
             "dest": "/api/index.php"
+        },
+        {
+            "src": "/../bootstrap/app.php",
+            "dest": "/api/index.php"
         }
     ],
     "env": {
@@ -47,6 +51,8 @@
         "MIX_PUSHER_APP_ID": "${PUSHER_APP_ID}",
         "MIX_PUSHER_APP_SECRET": "${PUSHER_APP_SECRET}",
         "MIX_PUSHER_APP_CLUSTER": "${PUSHER_APP_CLUSTER}",
+
+
         "APP_CONFIG_CACHE": "/tmp/config.php",
         "APP_EVENTS_CACHE": "/tmp/events.php",
         "APP_PACKAGES_CACHE": "/tmp/packages.php",
