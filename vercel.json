@@ -19,7 +19,7 @@
 
         "DB_CONNECTION": "mysql",
         "DB_HOST": "127.0.0.1",
-        "DB_PORT": 3306,
+        "DB_PORT": "3306",
         "DB_DATABASE": "FirstRoom",
         "DB_USERNAME": "root",
         "DB_PASSWORD": "",
@@ -28,7 +28,7 @@
 
         "MAIL_MAILER": "smtp",
         "MAIL_HOST": "smtp.mailtrap.io",
-        "MAIL_PORT": 2525,
+        "MAIL_PORT": "2525",
         "MAIL_USERNAME": "e9436b077328c0",
         "MAIL_PASSWORD": "48de336cf43868",
         "MAIL_ENCRYPTION": "null",
