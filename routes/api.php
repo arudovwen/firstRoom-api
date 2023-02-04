@@ -48,7 +48,7 @@ Route::get('/auth/login/{provider}', [LinkedSocialAccountController::class, 'han
 Route::post('/auth/{provider}/callback', [LinkedSocialAccountController::class, 'handleCallback']);
 
 //Guest api
-
+Route::get('get-all', [PropertyController::class, 'getAll']);
 Route::middleware('auth:sanctum')->group(function () {
     //User api
  
@@ -63,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('get/message/users/list', [MessageController::class, 'getMessageUsersList']);
 
         // property api
-        Route::get('get-all', [PropertyController::class, 'getAll']);
+      
         Route::apiResource("properties", PropertyController::class);
         Route::get('get-property/{id}', [PropertyController::class, 'getProperty']);
         
