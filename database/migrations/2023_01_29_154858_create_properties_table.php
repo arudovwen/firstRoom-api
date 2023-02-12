@@ -20,7 +20,9 @@ return new class extends Migration
             $table->text("property_description")->nullable();
             $table->string("property_type")->nullable();
             $table->string("posting_type")->nullable();
-            $table->string("advert_type")->nullable();  
+            $table->string("advert_type")->nullable(); 
+            $table->string("location")->nullable();
+            $table->string("status")->default("pending");  
             $table->boolean("is_active")->default(false);
             $table->timestamps();
         });

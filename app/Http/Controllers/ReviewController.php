@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Review;
 use Illuminate\Http\Request;
+use App\Notifications\PropertyReviewd;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 
 class ReviewController extends Controller
 {
@@ -60,6 +62,13 @@ class ReviewController extends Controller
         $review->message = $request->message;
         $review->rating = $request->rating;
         $review->save();
+
+        $property = Property::find($request->property_id);
+        $detail = [
+            "message" =>  "Someone left a review on your listing  with title, " . $property->property_title
+        ];
+
+        Notification::send($user, new PropertyReviewd($detail));
         return response()->json([
             "status" => true,
             "message" => "created",

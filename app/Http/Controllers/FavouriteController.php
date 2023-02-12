@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Favourite;
 use Illuminate\Http\Request;
+use App\Notifications\PropertyFavourited;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 
 class FavouriteController extends Controller
 {
@@ -55,6 +57,13 @@ class FavouriteController extends Controller
             $favourite->user_id = $user->id;
             $favourite->property_id = $request->property_id;
             $favourite->save();
+
+            $property = Property::find($request->property_id);
+            $detail = [
+                "message" =>  "Your listing  with title, " . $property->property_title . " has been added to someones favourites"
+            ];
+            Notification::send($user, new PropertyFavourited($detail));
+
             return response()->json([
                 "status" => true,
                 "message" => "created",

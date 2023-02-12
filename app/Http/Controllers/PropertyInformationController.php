@@ -5,15 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PropertyInformation;
 use Illuminate\Support\Facades\Validator;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class PropertyInformationController extends Controller
 {
 
-    public function __construct(){
+    public function __construct()
+    {
 
         $this->middleware('auth:sanctum')->except("index", "store", "show");
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -32,6 +34,27 @@ class PropertyInformationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function uploadFile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "file" => "required",
+
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors(),
+
+            ], 422);
+        }
+
+        $uploadedFileUrl = cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'success',
+            'data' =>  $uploadedFileUrl
+        ]);
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -46,7 +69,6 @@ class PropertyInformationController extends Controller
         }
 
         $user = auth("sanctum")->user();
-
 
         $property = new PropertyInformation();
         $property->property_id = $request->property_id;
@@ -111,6 +133,7 @@ class PropertyInformationController extends Controller
         if ($request->has('amenities') && $request->filled('amenities') && !is_null($request->amenities)) {
             $propertyInformation->amenities = $request->amenities;
         }
+
 
         if ($request->has('no_of_beds') && $request->filled('no_of_beds') && !is_null($request->no_of_beds)) {
             $propertyInformation->no_of_beds = $request->no_of_beds;
