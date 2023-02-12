@@ -75,7 +75,15 @@ class PropertyController extends Controller
         }
 
         $user = auth("sanctum")->user();
+        $subscription = $user->subscription()->first();
 
+        if (!$subscription->max_usage && !$user->is_admin) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No active plan',
+               
+            ]);
+        }
         $property = new Property();
         $property->property_title = $request->property_title;
         $property->property_description = $request->property_description;
@@ -84,6 +92,11 @@ class PropertyController extends Controller
         $property->advert_type = $request->advert_type;
         $property->user_id = !is_null($user)?$user->id:null;
         $property->save();
+
+        if ($subscription->max_usage && !$user->is_admin) {
+            $subscription->max_usage = $subscription->max_usage - 1;
+            $subscription->save();
+        }
 
         return response()->json([
             'status' => true,

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Mail\PasswordReset;
 use Illuminate\Support\Str;
 use App\Jobs\VerifyEmailJob;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -106,6 +107,12 @@ class UserController extends Controller
                     $referringUser->notify(new NewReferral($user));
                 }
 
+                //Create default subscription
+
+                $subscription = new Subscription();
+                $subscription->user_id = $user->id;
+                $subscription->save();
+                
 
                 //send welcome email
                 dispatch(new \App\Jobs\WelcomeEmailJob($data))->afterResponse();

@@ -154,4 +154,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(SavedSearch::class);
     }
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class);
+    }
+    public function plans()
+    {
+        return $this->hasMany(Plan::class);
+    }
 }

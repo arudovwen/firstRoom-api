@@ -110,7 +110,7 @@ namespace App\Models{
  * App\Models\Interaction
  *
  * @property int $id
- * @property string $user_id
+ * @property string|null $user_id
  * @property int $property_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -175,7 +175,11 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Message whereUserId($value)
  * @mixin \Eloquent
+ * @property string|null $read_at
+ * @property string|null $deleted_at
  * @property-read \App\Models\User|null $receiver
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Message whereReadAt($value)
  */
 	class Message extends \Eloquent {}
 }
@@ -259,6 +263,17 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Plan
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|Plan newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Plan newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Plan query()
+ */
+	class Plan extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Property
  *
  * @property int $id
@@ -337,6 +352,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyInformation whereTypeOfProperty($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PropertyInformation whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $property_price
+ * @method static \Illuminate\Database\Eloquent\Builder|PropertyInformation wherePropertyPrice($value)
  */
 	class PropertyInformation extends \Eloquent {}
 }
@@ -371,7 +388,7 @@ namespace App\Models{
  * @property string $rating
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Property $property
+ * @property-read \App\Models\Property|null $property
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Review newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Review newQuery()
@@ -440,7 +457,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $user_id
- * @property string $search_data
+ * @property mixed $search_data
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
@@ -454,6 +471,18 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|SavedSearch whereUserId($value)
  */
 	class SavedSearch extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Subscription
+ *
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Subscription query()
+ */
+	class Subscription extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -553,10 +582,13 @@ namespace App\Models{
  * @property-read int|null $favourites_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Interaction[] $interactions
  * @property-read int|null $interactions_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Plan[] $plans
+ * @property-read int|null $plans_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Review[] $reviews
  * @property-read int|null $reviews_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\SavedSearch[] $savedsearches
  * @property-read int|null $savedsearches_count
+ * @property-read \App\Models\Subscription|null $subscription
  */
 	class User extends \Eloquent {}
 }

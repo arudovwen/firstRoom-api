@@ -11,10 +11,12 @@ use App\Http\Controllers\FavouriteController;
 use App\Http\Controllers\InteractionController;
 use App\Http\Controllers\LinkedSocialAccountController;
 use App\Http\Controllers\NewFlatMateController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PropertyInformationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoomInformationController;
 use App\Http\Controllers\SavedSearchController;
+use App\Http\Controllers\SubscriptionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,6 +91,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::apiResource("saved-searches", SavedSearchController::class);
 
+       
+        Route::get('get-plans', [PlanController::class, 'index']);
+
+        Route::get('get-subscription', [SubscriptionController::class, 'getSubscription']);
+        Route::post('subscribe-plan', [SubscriptionController::class, 'store']);
 
       });
    
@@ -96,7 +103,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Admin api
     Route::middleware('ability:role-admin')->group(function () {
+      Route::apiResource("plans", PlanController::class);
 
-
+      Route::apiResource("subscriptions", SubscriptionController::class);
     });
 });
